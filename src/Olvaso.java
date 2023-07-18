@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -5,7 +7,7 @@ public class Olvaso {
     private String nev;
     private int olvasojegy;
     private List<String> preferaltMufajok = new ArrayList<>();
-    private List<Konyv> kolcsonzottKonyvek = new ArrayList<>();
+    private List<Kolcsonzes> kolcsonzottKonyvek = new ArrayList<>();
 
     public Olvaso(String nev, int olvasojegy) {
         this.nev = nev;
@@ -18,7 +20,7 @@ public class Olvaso {
 
     public void kolcsonozKonyvet(Konyv konyv, Konyvtar konyvtar) {
         if (konyvtar.getKonyvek().contains(konyv) && konyv.getPeldanyszam() > 0) {
-            this.kolcsonzottKonyvek.add(konyv);
+            this.kolcsonzottKonyvek.add(new Kolcsonzes(konyv, LocalDate.now()));
             konyv.setPeldanyszam(konyv.getPeldanyszam() - 1);
             System.out.println(this.nev + " kölcsönzött egy könyvet: " + konyv.getCim());
         } else {
@@ -27,13 +29,32 @@ public class Olvaso {
     }
 
     public void visszaadKonyvet(Konyv konyv, Konyvtar konyvtar) {
-        if (this.kolcsonzottKonyvek.contains(konyv)) {
-            this.kolcsonzottKonyvek.remove(konyv);
+        Kolcsonzes kolcsonzes = keresKolcsonzes(konyv);
+        if (kolcsonzes != null) {
+            this.kolcsonzottKonyvek.remove(kolcsonzes);
             konyv.setPeldanyszam(konyv.getPeldanyszam() + 1);
             System.out.println(this.nev + " visszaadott egy könyvet: " + konyv.getCim());
         } else {
             System.out.println(this.nev + " nem kölcsönzött ilyen könyvet: " + konyv.getCim());
         }
+    }
+
+    public Kolcsonzes keresKolcsonzes(Konyv konyv) {
+        for (Kolcsonzes kolcsonzes : kolcsonzottKonyvek) {
+            if (kolcsonzes.getKonyv().equals(konyv)) {
+                return kolcsonzes;
+            }
+        }
+        return null;
+    }
+
+    public long kolcsonzottNapok(Konyv konyv) {
+        Kolcsonzes kolcsonzes = keresKolcsonzes(konyv);
+        if (kolcsonzes != null) {
+            LocalDate most = LocalDate.now();
+            return ChronoUnit.DAYS.between(kolcsonzes.getKolcsonzesDatum(), most);
+        }
+        return -1; // Visszaadunk -1-et, ha az olvasó nem kölcsönözte még ki a könyvet
     }
 
 
@@ -50,7 +71,11 @@ public class Olvaso {
     }
 
     public List<Konyv> getKolcsonzottKonyvek() {
-        return kolcsonzottKonyvek;
+        List<Konyv> konyvek = new ArrayList<>();
+        for (Kolcsonzes kolcsonzes : kolcsonzottKonyvek) {
+            konyvek.add(kolcsonzes.getKonyv());
+        }
+        return konyvek;
     }
 
     @Override

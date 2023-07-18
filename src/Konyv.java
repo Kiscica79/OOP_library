@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -8,7 +9,7 @@ public class Konyv {
     private int kiadasiEv;
     private String mufaj;
     private int peldanyszam;
-    private List<String> irok = new ArrayList<>();
+    private List<String> irok = new LinkedList<>();
 
     public Konyv(String cim, int kiadasiEv, String mufaj, int peldanyszam) {
         this.cim = cim;
