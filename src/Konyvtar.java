@@ -28,6 +28,7 @@ public class Konyvtar {
         return olvasok;
     }
 
+
     @Override
     public String toString() {
         return "Konyvtar{" +

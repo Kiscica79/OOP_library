@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -6,12 +7,14 @@ public class Konyv {
     private String cim;
     private int kiadasiEv;
     private String mufaj;
-    private List<String> irok;
+    private int peldanyszam;
+    private List<String> irok = new ArrayList<>();
 
-    public Konyv(String cim, int kiadasiEv, String mufaj) {
+    public Konyv(String cim, int kiadasiEv, String mufaj, int peldanyszam) {
         this.cim = cim;
         this.kiadasiEv = kiadasiEv;
         this.mufaj = mufaj;
+        this.peldanyszam = peldanyszam;
     }
 
     public void hozzaadIro(String iroNev) {
@@ -32,6 +35,14 @@ public class Konyv {
 
     public List<String> getIrok() {
         return irok;
+    }
+
+    public int getPeldanyszam() {
+        return peldanyszam;
+    }
+
+    public void setPeldanyszam(int peldanyszam) {
+        this.peldanyszam = peldanyszam;
     }
 
     @Override
